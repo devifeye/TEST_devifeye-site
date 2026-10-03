@@ -1,0 +1,103 @@
+'use client'
+
+import { useState } from 'react'
+import { Check, Minus } from 'lucide-react'
+import { plans } from '@/lib/plans'
+import { APP_URL, linkButton } from '@/lib/site'
+import { cn } from '@/lib/utils'
+
+export function PricingPlans() {
+  const [yearly, setYearly] = useState(false)
+
+  return (
+    <div className="flex flex-col items-center gap-10">
+      <div role="radiogroup" aria-label="Billing period" className="inline-flex rounded-lg border border-border bg-card p-1">
+        {[
+          { value: false, label: 'Monthly' },
+          { value: true, label: 'Yearly' },
+        ].map((option) => (
+          <button
+            key={option.label}
+            type="button"
+            role="radio"
+            aria-checked={yearly === option.value}
+            onClick={() => setYearly(option.value)}
+            className={cn(
+              'inline-flex items-center gap-2 rounded-md px-4 py-1.5 text-sm transition-colors',
+              yearly === option.value ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground',
+            )}
+          >
+            {option.label}
+            {option.value && (
+              <span
+                className={cn(
+                  'rounded px-1.5 py-0.5 font-mono text-[10px]',
+                  yearly ? 'bg-primary-foreground/15' : 'bg-primary/15 text-primary',
+                )}
+              >
+                2 months free
+              </span>
+            )}
+          </button>
+        ))}
+      </div>
+
+      <div className="grid w-full gap-6 md:grid-cols-3">
+        {plans.map((plan) => {
+          const price = yearly ? plan.yearly : plan.monthly
+          return (
+            <article
+              key={plan.id}
+              className={cn(
+                'relative flex flex-col rounded-xl border bg-card p-6',
+                plan.highlighted ? 'border-primary/60 shadow-[0_0_60px_-20px_oklch(0.83_0.15_78/0.45)]' : 'border-border',
+              )}
+            >
+              {plan.highlighted && (
+                <span className="absolute -top-3 left-6 rounded-full bg-primary px-2.5 py-0.5 font-mono text-[11px] text-primary-foreground">
+                  Most popular
+                </span>
+              )}
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold">{plan.name}</h3>
+                <span className="rounded-full border border-border px-2 py-0.5 font-mono text-[11px] text-muted-foreground">
+                  {`${plan.cadence} checks`}
+                </span>
+              </div>
+              <p className="mt-1 text-sm text-muted-foreground">{plan.tagline}</p>
+              <p className="mt-6 flex items-baseline gap-1">
+                <span className="text-4xl font-semibold tracking-tight">{`$${price}`}</span>
+                <span className="text-sm text-muted-foreground">
+                  {plan.monthly === 0 ? 'forever' : yearly ? '/ year' : '/ month'}
+                </span>
+              </p>
+              <a
+                href={`${APP_URL}/signup?plan=${plan.id}&billing=${yearly ? 'yearly' : 'monthly'}`}
+                className={cn('mt-6 w-full', plan.highlighted ? linkButton.primary : linkButton.outline)}
+              >
+                {plan.cta}
+              </a>
+              <ul className="mt-6 flex flex-col gap-3 border-t border-border pt-6">
+                {plan.features.map((feature) => (
+                  <li key={feature} className="flex gap-2.5 text-sm">
+                    <Check className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden="true" />
+                    {feature}
+                  </li>
+                ))}
+                {plan.missing?.map((feature) => (
+                  <li key={feature} className="flex gap-2.5 text-sm text-muted-foreground">
+                    <Minus className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
+                    <span>
+                      <span className="sr-only">Not included: </span>
+                      {feature}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </article>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
