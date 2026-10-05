@@ -155,7 +155,7 @@ export function WatchingEye({
     if (readoutRef.current) {
       readoutRef.current.textContent = `x ${formatAxis(look.nx)}  y ${formatAxis(-look.ny)}`;
     }
-  }, [look.nx, look.ny, alert]);
+  }, [look?.nx, look?.ny, alert]);
 
   useEffect(() => {
     const svg = svgRef.current;
