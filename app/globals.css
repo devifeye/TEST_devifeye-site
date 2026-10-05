@@ -105,24 +105,6 @@
   background-size: 48px 48px;
 }
 
-@keyframes blink {
-  0%, 92%, 100% {
-    transform: scaleY(1);
-  }
-  95% {
-    transform: scaleY(0.06);
-  }
-}
-
-@keyframes scan {
-  0% {
-    transform: translateY(-100%);
-  }
-  100% {
-    transform: translateY(100%);
-  }
-}
-
 @keyframes pulse-ring {
   0% {
     transform: scale(0.85);
@@ -134,25 +116,38 @@
   }
 }
 
-.animate-blink {
-  animation: blink 7s ease-in-out infinite;
-  transform-origin: center;
-  transform-box: fill-box;
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-.animate-blink-once {
-  animation: blink-once 260ms ease-in-out;
-  transform-origin: center;
-  transform-box: fill-box;
-}
-
-@keyframes blink-once {
+@keyframes rec {
   0%,
   100% {
-    transform: scaleY(1);
+    opacity: 1;
   }
   50% {
-    transform: scaleY(0.06);
+    opacity: 0.3;
+  }
+}
+
+/* Drift scope: packets flowing along the TEST/LIVE traces. Offset = one dash period for a seamless loop. */
+@keyframes trace-flow {
+  to {
+    stroke-dashoffset: -14;
+  }
+}
+
+/* Drift scope: one-shot ping when a drift is caught or the scope is clicked. */
+@keyframes ping-once {
+  0% {
+    transform: scale(0.5);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(3);
+    opacity: 0;
   }
 }
 
@@ -162,123 +157,44 @@
   transform-box: fill-box;
 }
 
-@keyframes spin-slow {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes caret {
-  0%,
-  49% {
-    opacity: 1;
-  }
-  50%,
-  100% {
-    opacity: 0;
-  }
-}
-
-@keyframes eye-scan {
-  0% {
-    transform: translateY(0);
-    opacity: 0;
-  }
-  8% {
-    opacity: 1;
-  }
-  40% {
-    transform: translateY(164px);
-    opacity: 0;
-  }
-  100% {
-    transform: translateY(164px);
-    opacity: 0;
-  }
-}
-
-@keyframes rec {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.25;
-  }
-}
-
 .animate-spin-slow {
-  animation: spin-slow 32s linear infinite;
+  animation: spin-slow 28s linear infinite;
   transform-origin: center;
   transform-box: fill-box;
 }
 
 .animate-spin-reverse {
-  animation: spin-slow 14s linear infinite reverse;
+  animation: spin-slow 12s linear infinite reverse;
   transform-origin: center;
   transform-box: fill-box;
-}
-
-.animate-caret {
-  animation: caret 1.1s steps(1) infinite;
-}
-
-.animate-eye-scan {
-  animation: eye-scan 6s ease-in-out infinite;
 }
 
 .animate-rec {
   animation: rec 1.6s ease-in-out infinite;
 }
 
+.animate-trace-flow {
+  stroke-dasharray: 2 12;
+  animation: trace-flow 1.2s linear infinite;
+}
+
+.animate-ping-once {
+  animation: ping-once 900ms ease-out;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+/* Keep this last so nothing above can override it. */
 @media (prefers-reduced-motion: reduce) {
-  .animate-blink,
-  .animate-blink-once,
   .animate-pulse-ring,
   .animate-spin-slow,
   .animate-spin-reverse,
-  .animate-caret,
-  .animate-eye-scan,
-  .animate-rec {
+  .animate-rec,
+  .animate-trace-flow,
+  .animate-ping-once {
     animation: none;
   }
   html {
     scroll-behavior: auto;
   }
-}
-@keyframes flow-left {
-  /* handled by animateMotion, but you can add opacity pulse if desired */
-}
-@keyframes flow-right {
-  /* same */
-}
-
-@keyframes zap {
-  0%   { opacity: 0; stroke-dashoffset: 40; }
-  15%  { opacity: 1; }
-  70%  { opacity: 1; }
-  100% { opacity: 0; stroke-dashoffset: 0; }
-}
-
-.animate-zap {
-  stroke-dasharray: 40;
-  animation: zap 0.7s ease-out forwards;
-}
-
-.animate-spin-slow {
-  animation: spin 18s linear infinite;
-}
-.animate-spin-reverse {
-  animation: spin 12s linear infinite reverse;
-}
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-.animate-rec {
-  animation: rec 1.6s ease-in-out infinite;
-}
-@keyframes rec {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.35; }
 }
