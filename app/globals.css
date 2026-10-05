@@ -246,3 +246,39 @@
     scroll-behavior: auto;
   }
 }
+@keyframes flow-left {
+  /* handled by animateMotion, but you can add opacity pulse if desired */
+}
+@keyframes flow-right {
+  /* same */
+}
+
+@keyframes zap {
+  0%   { opacity: 0; stroke-dashoffset: 40; }
+  15%  { opacity: 1; }
+  70%  { opacity: 1; }
+  100% { opacity: 0; stroke-dashoffset: 0; }
+}
+
+.animate-zap {
+  stroke-dasharray: 40;
+  animation: zap 0.7s ease-out forwards;
+}
+
+.animate-spin-slow {
+  animation: spin 18s linear infinite;
+}
+.animate-spin-reverse {
+  animation: spin 12s linear infinite reverse;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.animate-rec {
+  animation: rec 1.6s ease-in-out infinite;
+}
+@keyframes rec {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
