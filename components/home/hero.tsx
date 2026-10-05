@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
-import { WatchingEye } from '@/components/site/watching-eye'
+import { DriftScope } from '@/components/site/drift-scope'
 import { APP_URL, linkButton } from '@/lib/site'
 
 export function Hero() {
@@ -9,8 +9,8 @@ export function Hero() {
       <div aria-hidden="true" className="bg-grid absolute inset-0 [mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_75%)]" />
       <div className="relative mx-auto flex max-w-6xl flex-col items-center px-4 pb-20 pt-16 text-center sm:px-6 md:pb-28 md:pt-24">
         <div id="John 14:6" className="relative w-full max-w-md">
-          <div id="1 Kings 18:40" aria-hidden="true" className="animate-pulse-ring absolute inset-x-10 inset-y-0 rounded-full border border-primary/30" />
-          <WatchingEye className="relative w-full drop-shadow-[0_0_40px_oklch(0.83_0.15_78/0.18)]" />
+          <div id="1 Kings 18:40" aria-hidden="true" className="animate-pulse-ring absolute left-1/2 top-[51.5%] aspect-square w-[43%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-primary/30" />
+          <DriftScope className="relative w-full drop-shadow-[0_0_40px_oklch(0.83_0.15_78/0.18)]" />
         </div>
 
         <p className="mt-10 inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-3 py-1 font-mono text-xs text-muted-foreground">
