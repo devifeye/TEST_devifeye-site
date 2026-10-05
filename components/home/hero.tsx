@@ -1,49 +1,39 @@
-import Link from 'next/link'
-import { ArrowRight } from 'lucide-react'
-import { WatchingEye } from '@/components/site/watching-eye'
-import { APP_URL, linkButton } from '@/lib/site'
+import { ArrowRight } from "lucide-react";
+import { DualWatch } from "@/components/site/dual-watch";
+import { Button } from "@/components/ui/button";
+import { SITE } from "@/lib/site";
 
 export function Hero() {
   return (
-    <section className="relative overflow-hidden">
-      <div aria-hidden="true" className="bg-grid absolute inset-0 [mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_75%)]" />
-      <div className="relative mx-auto flex max-w-6xl flex-col items-center px-4 pb-20 pt-16 text-center sm:px-6 md:pb-28 md:pt-24">
-        <div className="relative w-full max-w-md">
-          <div aria-hidden="true" className="animate-pulse-ring absolute inset-x-10 inset-y-0 rounded-full border border-primary/30" />
-          <WatchingEye className="relative w-full drop-shadow-[0_0_40px_oklch(0.83_0.15_78/0.18)]" />
-        </div>
-
-        <p className="mt-10 inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-3 py-1 font-mono text-xs text-muted-foreground">
+    <section className="relative">
+      <div aria-hidden="true" className="bg-grid hero-mask absolute inset-0" />
+      <div className="relative mx-auto flex max-w-6xl flex-col items-center px-4 pb-14 pt-6 text-center sm:px-6 md:pb-20 md:pt-8">
+        <DualWatch />
+        <p className="mt-5 inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 font-mono text-2xs text-muted-foreground sm:text-xs">
           <span className="size-1.5 rounded-full bg-success" aria-hidden="true" />
-          dev · if · eye — always watching
+          {SITE.eyebrow}
         </p>
-
-        <h1 className="mt-6 max-w-3xl text-balance text-4xl font-semibold tracking-tight sm:text-5xl md:text-6xl">
+        <h1 className="mt-4 max-w-3xl text-3xl font-semibold tracking-tight sm:text-4xl md:text-5xl">
           We watch for drift,
           <br />
-          <span className="text-primary">so you don&apos;t have to.</span>
+          <span className="text-primary">so you don't have to.</span>
         </h1>
-
-        <p className="mt-6 max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground md:text-lg">
-          Devifeye keeps an eye on your TEST and LIVE environments across Supabase, GitHub and your VPS
-          servers. The moment someone tweaks a table, policy or config out-of-band, you hear about it before
-          production does.
+        <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground md:text-base">
+          {SITE.description}
         </p>
-
-        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-          <a href={`${APP_URL}/signup`} className={linkButton.primary}>
-            Start watching for free
-            <ArrowRight className="size-4" aria-hidden="true" />
-          </a>
-          <Link href="/#how" className={linkButton.outline}>
-            See how it works
-          </Link>
+        <div className="mt-8 flex w-full flex-col items-center justify-center gap-3 sm:w-auto sm:flex-row">
+          <Button asChild>
+            <a href="#start">
+              Start watching for free
+              <ArrowRight className="size-4" aria-hidden="true" />
+            </a>
+          </Button>
+          <Button asChild variant="outline">
+            <a href="#how">See how it works</a>
+          </Button>
         </div>
-
-        <p className="mt-6 text-xs text-muted-foreground">
-          Metadata only. We never read your rows, secrets or edge function code.
-        </p>
+        <p className="mt-5 text-xs text-muted-foreground">{SITE.privacy}</p>
       </div>
     </section>
-  )
+  );
 }
