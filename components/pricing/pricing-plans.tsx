@@ -55,7 +55,7 @@ export function PricingPlans() {
             >
               {plan.highlighted && (
                 <span className="absolute -top-3 left-6 rounded-full bg-primary px-2.5 py-0.5 font-mono text-[11px] text-primary-foreground">
-                  Most popular
+                  Our top pick for solo devs
                 </span>
               )}
               <div className="flex items-center justify-between">
