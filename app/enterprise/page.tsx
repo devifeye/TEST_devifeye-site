@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { Building2, RotateCcw, ClipboardCheck, Plug, ArrowRight } from 'lucide-react'
 import { SectionHeading } from '@/components/site/section-heading'
-import { WatchingEye } from '@/components/site/watching-eye'
+import { DriftScope } from '@/components/site/drift-scope'
 import { EnquiryForm } from '@/components/enterprise/enquiry-form'
 import { linkButton } from '@/lib/site'
 
@@ -61,7 +61,7 @@ export default function EnterprisePage() {
             <p className="font-mono text-xs text-muted-foreground">
               Custom solutions typically range from high four to mid five figures.
             </p>
-            <WatchingEye className="hidden w-full max-w-sm lg:block" />
+            <DriftScope className="hidden w-full max-w-sm lg:block" />
           </div>
           <div id="enquiry" className="scroll-mt-24 rounded-2xl border border-border bg-card p-6 shadow-xl shadow-black/10 sm:p-8">
             <div className="mb-6 flex flex-col gap-1">
