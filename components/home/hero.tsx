@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
-import { SyncCore } from '@/components/site/sync-core'
 import { APP_URL, linkButton } from '@/lib/site'
 
 export function Hero() {
