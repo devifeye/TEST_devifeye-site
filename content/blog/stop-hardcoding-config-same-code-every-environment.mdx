@@ -1,0 +1,151 @@
+export const metadata = {
+  title: 'Stop Hardcoding Config: Same Code in TEST and LIVE',
+  description:
+    'Hardcoded URLs and keys make TEST and LIVE drift apart. Keep your code identical in every environment by moving config into environment variables.',
+  date: '2026-10-05',
+  author: 'Devifeye Team',
+  tags: ['environment variables', 'config', 'nextjs', 'vercel', 'devops'],
+}
+
+If your TEST and LIVE environments run *different code*, you are never really testing what your users get. The fix is simple: **keep the code identical everywhere and move every value that changes between environments into environment variables.** Your TEST and LIVE files become byte-for-byte the same, and only the configuration around them differs.
+
+This post shows the most common way this goes wrong, the rule that fixes it, and how to do it safely in a Next.js app on Vercel.
+
+## The problem: same line, different values
+
+Here's a pattern we see constantly. The TEST copy of a file has:
+
+```ts
+const allowedOrigins = ['https://test.website.com']
+```
+
+And the LIVE copy has:
+
+```ts
+const allowedOrigins = ['https://website.com']
+```
+
+One line, one value, two versions of the same file. It looks harmless, but it means:
+
+- every deploy needs someone to remember to swap the value back,
+- the code you tested is not the code you shipped,
+- TEST and LIVE can never be compared directly, because they are *supposed* to differ.
+
+Multiply that by API URLs, webhook endpoints, feature flags and third-party keys, and you end up with two codebases that only look like one.
+
+## The rule: config lives in the environment, not in the code
+
+This isn't a new idea. It's factor III of [The Twelve-Factor App](https://12factor.net/config), a widely used methodology for running software in production. It defines config as everything likely to vary between deploys, such as staging, production and developer machines. It treats storing config as constants in the code as a violation, because **config varies across deploys, code does not**.
+
+It also offers a useful test: could you make your codebase public right now without leaking any credentials? If not, some config is still living in your code.
+
+## The fix: one line of code, two values
+
+Read the value from the environment instead:
+
+```ts
+const allowedOrigins = (process.env.ALLOWED_ORIGINS ?? '')
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean)
+
+if (allowedOrigins.length === 0) {
+  throw new Error('ALLOWED_ORIGINS is not set')
+}
+```
+
+Then give each environment its own value:
+
+```bash
+# TEST
+ALLOWED_ORIGINS=https://test.website.com
+
+# LIVE
+ALLOWED_ORIGINS=https://website.com,https://www.website.com
+```
+
+The file is now identical in both environments. The variable name stays the same; only its value changes. A few details in that snippet matter:
+
+- **Include the scheme.** Browsers send the full origin, like `https://website.com`. A bare `website.com` will never match.
+- **Support a list.** Production often needs both the apex domain and `www`, so a comma-separated value saves you a second variable.
+- **Fail loudly.** Without the check, a missing variable quietly produces an empty list. Depending on your CORS setup, that either blocks every request or falls back to something far more permissive than you intended. Crashing at startup with a clear message is much better.
+- **Use descriptive names.** `ALLOWED_ORIGINS` tells the next developer exactly what the value is for. A generic name like `WEBSITE` doesn't.
+
+## Why identical code matters
+
+### It's simpler
+
+Nobody has to remember which values to swap before a release. There is nothing to swap. The deploy checklist gets shorter, and so does the list of things that can go wrong.
+
+### You test what your users actually run
+
+When TEST runs the exact same code as LIVE, a bug you can reproduce in TEST is a bug your users will hit, and a fix that works in TEST will work in LIVE. Twelve-Factor calls this [dev/prod parity](https://12factor.net/dev-prod-parity): keep the gap between environments as small as possible, so surprises show up before release, not after.
+
+### Promoting a change becomes trivial
+
+With identical code, getting a tested change into production is just a matter of shipping the same files. The best way to do that is to **deploy the same Git commit to both environments**. Production then gets exactly what you tested, with a full history and a one-click rollback.
+
+Not every team is there yet. If you deploy by copying files to a server, identical code still helps: there's nothing to edit after the copy, so there's nothing to forget.
+
+### Every difference becomes a real signal
+
+This is the benefit most teams miss. When TEST and LIVE are *meant* to differ, every comparison is full of expected noise, and nobody can tell a deliberate difference from a mistake. Once the code is identical, **any difference between TEST and LIVE is drift**: something changed out-of-band and needs a look.
+
+<DevifeyeCta
+  title="Identical code makes drift easy to spot. Devifeye spots it for you."
+  body="Devifeye compares your TEST and LIVE Supabase schemas, your GitHub migrations and your tracked server config, and alerts you on Discord or Telegram the moment they stop matching. Nobody has to diff thousands of lines by hand."
+/>
+
+## Doing it safely in Next.js and Vercel
+
+Environment variables are simple, but a few framework details catch people out.
+
+### Server-only by default, public only on purpose
+
+In Next.js, [environment variables are only available on the server by default](https://nextjs.org/docs/app/guides/environment-variables). To use one in the browser, you prefix it with `NEXT_PUBLIC_`. Next.js then writes the value directly into the JavaScript it sends to the browser, where anyone can read it.
+
+<Callout type="warning" title="Never put secrets in NEXT_PUBLIC_ variables">
+  Database passwords, service role keys and private API tokens must never use the `NEXT_PUBLIC_` prefix. Anything with that prefix ends up visible in the browser.
+</Callout>
+
+Public values are also fixed when the app is built: changing them later has no effect until you rebuild. On Vercel that happens naturally, because each environment gets its own build.
+
+### Set values in Vercel, not in committed files
+
+On Vercel, you set [environment variables in your project settings](https://vercel.com/docs/environment-variables) and scope each one to Production, Preview or Development. That's where the TEST and LIVE values live. Your local `.env` files are for development only:
+
+- add `.env*` to `.gitignore` so they're never committed,
+- commit a `.env.example` with every variable name and placeholder values, so new developers know what to set,
+- use `vercel env pull` to fetch development values instead of passing secrets around in chat.
+
+### Don't branch on the environment name
+
+The tempting shortcut is code like this:
+
+```ts
+// Avoid
+const apiUrl = process.env.NODE_ENV === 'production' ? 'https://api.website.com' : 'https://api.test.website.com'
+```
+
+It brings back the same problem in a new shape: the values are still hardcoded, and adding a third environment means editing code. The Twelve-Factor guide calls branching on the environment name the worst outcome of grouping config into named environments. Use one variable per setting instead:
+
+```ts
+const apiUrl = process.env.API_URL
+```
+
+## Checklist
+
+- [ ] No URLs, domains, keys or IDs that differ between environments are hardcoded
+- [ ] Every environment-specific value is read from an environment variable
+- [ ] Required variables are checked at startup, with a clear error if missing
+- [ ] Variable names say what they're for
+- [ ] No secrets in `NEXT_PUBLIC_` variables
+- [ ] `.env` files are gitignored; `.env.example` is committed
+- [ ] No `if (production)` branches that pick values
+- [ ] TEST and LIVE deploy the same code, ideally the same Git commit
+
+## The bottom line
+
+Same code, different config. It's one of the smallest changes you can make to a project, and it pays off every single deploy: nothing to swap, nothing to forget, and a TEST environment that actually tells you how LIVE will behave.
+
+It also sets up a clean way to keep the two honest. With the code identical, any gap between TEST and LIVE is drift. If you haven't split your environments yet, start with [why separate environments matter](/blog/why-separate-dev-staging-production-environments-matter). When you're ready to stop checking for drift by hand, [Devifeye can watch for it](/#how). [Plans start free](/pricing).
