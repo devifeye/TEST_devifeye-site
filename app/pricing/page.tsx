@@ -9,7 +9,7 @@ import { FinalCta } from '@/components/site/final-cta'
 
 export const metadata: Metadata = {
   title: 'Pricing',
-  description: 'Free weekly drift checks, Pro daily checks with a VPS agent for $10/mo, or Agency hourly checks across 15 projects for $50/mo.',
+  description: 'Free weekly drift checks, Pro daily checks with a VPS agent for $10/mo, or Agency hourly checks for 3 to 25 projects from $15/mo.',
 }
 
 export default function PricingPage() {
