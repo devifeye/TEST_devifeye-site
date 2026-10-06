@@ -1,5 +1,6 @@
+export const SITE_URL = 'https://devifeye.com'
 export const APP_URL = 'https://app.devifeye.com'
-export const CONTACT_EMAIL = 'hello@devifeye.com'
+export const CONTACT_EMAIL = 'help.devifeye@protonmail.com'
 export const SITE = {
   name: "Devifeye",
   eyebrow: "dev · if · eye — always watching",
@@ -14,6 +15,7 @@ export const navLinks = [
   { href: '/security', label: 'Security' },
   { href: '/pricing', label: 'Pricing' },
   { href: '/enterprise', label: 'Enterprise' },
+  { href: '/blog', label: 'Blog' },
 ]
 
 export const linkButton = {
@@ -22,3 +24,9 @@ export const linkButton = {
   outline:
     'inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-input bg-card/40 px-4 text-sm font-medium text-foreground transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring',
 }
+
+// Affiliate links: keep them in one place so they're easy to update or remove.
+// Always render with rel="sponsored" (see components/blog/mdx.tsx) and disclose them in the post.
+export const REFERRAL_LINKS = {
+  hostinger: 'https://hostinger.com?REFERRALCODE=MVWECHOINPKI',
+} as const
