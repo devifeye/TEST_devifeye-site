@@ -23,6 +23,7 @@ const columns = [
     title: 'Company',
     links: [
       { href: '/enterprise', label: 'Enterprise' },
+      { href: '/blog', label: 'Blog' },
       { href: `mailto:${CONTACT_EMAIL}`, label: 'Contact' },
     ],
   },
