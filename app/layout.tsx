@@ -4,13 +4,14 @@ import { Geist, Geist_Mono } from 'next/font/google'
 import { SiteHeader } from '@/components/site/site-header'
 import { SiteFooter } from '@/components/site/site-footer'
 import { ThemeProvider } from '@/components/theme-provider'
+import { SITE_URL } from '@/lib/site'
 import './globals.css'
 
 const geist = Geist({ subsets: ['latin'], variable: '--font-geist' })
 const geistMono = Geist_Mono({ subsets: ['latin'], variable: '--font-geist-mono' })
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://devifeye.com'),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: 'Devifeye — We watch for drift',
     template: '%s · Devifeye',
@@ -21,7 +22,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Devifeye — We watch for drift',
     description: 'Drift alerts for Supabase, GitHub and VPS. If a dev changes it, the eye catches it.',
-    url: 'https://devifeye.com',
+    url: SITE_URL,
     siteName: 'Devifeye',
     type: 'website',
   },
