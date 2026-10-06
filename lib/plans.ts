@@ -9,7 +9,48 @@ export type Plan = {
   missing?: string[]
   highlighted?: boolean
   cta: string
+  /** Plans priced by project count. Use `{n}` in feature strings for the selected count. */
+  scalable?: { min: number; max: number; default: number }
 }
+
+/*
+ * Agency: build-your-own pricing, 3–25 projects.
+ * Graduated (tax-bracket style): the base covers the first 3 projects, then each extra
+ * project is charged at the rate of the band it falls in. The total always rises with
+ * every project, never jumps, and gives a volume discount at scale.
+ *
+ *   3 projects            $15  ($5.00 / project, same rate as Pro)
+ *   4–8   +$5 each  →  8 = $40
+ *   9–17  +$4 each  → 17 = $76
+ *   18–25 +$3 each  → 25 = $100 ($4.00 / project)
+ *
+ * This is DISPLAY pricing only. The billing backend must compute the price itself from
+ * a validated project count and never trust a price sent from the browser.
+ */
+export const AGENCY_LIMITS = { min: 3, max: 25, default: 10 } as const
+const AGENCY_BASE_PRICE = 15
+const AGENCY_BANDS = [
+  { upTo: 8, perProject: 5 },
+  { upTo: 17, perProject: 4 },
+  { upTo: 25, perProject: 3 },
+] as const
+
+export function clampAgencyProjects(projects: number) {
+  if (!Number.isFinite(projects)) return AGENCY_LIMITS.default
+  return Math.min(AGENCY_LIMITS.max, Math.max(AGENCY_LIMITS.min, Math.round(projects)))
+}
+
+export function agencyMonthlyPrice(projects: number) {
+  const n = clampAgencyProjects(projects)
+  let price = AGENCY_BASE_PRICE
+  for (let project = AGENCY_LIMITS.min + 1; project <= n; project++) {
+    price += AGENCY_BANDS.find((band) => project <= band.upTo)!.perProject
+  }
+  return price
+}
+
+/** Yearly billing = 10 months (2 months free), same as Pro. */
+export const agencyYearlyPrice = (projects: number) => agencyMonthlyPrice(projects) * 10
 
 export const plans: Plan[] = [
   {
@@ -50,13 +91,14 @@ export const plans: Plan[] = [
   {
     id: 'agency',
     name: 'Agency',
-    tagline: 'For teams running client stacks.',
-    monthly: 50,
-    yearly: 500,
+    tagline: 'Build your plan: 3 to 25 projects.',
+    monthly: agencyMonthlyPrice(AGENCY_LIMITS.default),
+    yearly: agencyYearlyPrice(AGENCY_LIMITS.default),
     cadence: 'Hourly',
+    scalable: AGENCY_LIMITS,
     features: [
-      '15 projects with VPS agent',
-      '15 TEST · 15 LIVE · 15 VPS',
+      '{n} projects with VPS agent',
+      '{n} TEST · {n} LIVE · {n} VPS',
       'Hourly background checks',
       'One-click file overwrites',
       'Discord & Telegram bot alerts',
@@ -70,10 +112,10 @@ export const plans: Plan[] = [
 export type ComparisonValue = string | boolean
 
 export const comparisonRows: { label: string; values: [ComparisonValue, ComparisonValue, ComparisonValue] }[] = [
-  { label: 'Projects', values: ['1', '2', '15'] },
-  { label: 'TEST environments', values: ['1', '2', '15'] },
-  { label: 'LIVE environments', values: ['1', '2', '15'] },
-  { label: 'VPS agents', values: [false, '2', '15'] },
+  { label: 'Projects', values: ['1', '2', '3–25'] },
+  { label: 'TEST environments', values: ['1', '2', '3–25'] },
+  { label: 'LIVE environments', values: ['1', '2', '3–25'] },
+  { label: 'VPS agents', values: [false, '2', '3–25'] },
   { label: 'Background checks', values: ['Weekly', 'Daily', 'Hourly'] },
   { label: 'Discord & Telegram bots', values: [true, true, true] },
   { label: 'Custom API webhooks', values: [false, 'Single channel', 'Multi-channel'] },
