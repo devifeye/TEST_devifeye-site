@@ -6,6 +6,10 @@ const faqs = [
     a: 'A project is one app with a TEST environment and a LIVE environment. On Pro and Agency, each project also gets a VPS agent slot.',
   },
   {
+    q: 'How is Agency priced?',
+    a: 'Agency starts at $15/mo for 3 projects. Projects 4 to 8 add $5 each, 9 to 17 add $4 each, and 18 to 25 add $3 each, so 10 projects is $48/mo and 25 projects is $100/mo. Your price only ever goes up by the cost of the project you add. Need more than 25? Talk to us about Enterprise.',
+  },
+  {
     q: 'Will you ever read my table data or secrets?',
     a: 'No. We only read structural metadata: tables, columns, constraints, RLS policies, functions, triggers and indexes. Row data, secrets and edge function code are off on every plan, and no setting can turn them on.',
   },
@@ -19,7 +23,7 @@ const faqs = [
   },
   {
     q: 'Can I switch between monthly and yearly?',
-    a: 'Yes. Yearly billing gives you two months free on Pro ($100/yr) and Agency ($500/yr). You can switch at any time from your dashboard.',
+    a: 'Yes. Yearly billing gives you two months free: Pro is $100/yr, and Agency is 10× its monthly price for the number of projects you pick. You can switch at any time from your dashboard.',
   },
   {
     q: 'Are text alerts unlimited?',
