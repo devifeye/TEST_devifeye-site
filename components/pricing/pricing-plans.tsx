@@ -161,7 +161,7 @@ export function PricingPlans() {
               <p className="mt-6 flex items-baseline gap-1">
                 <span className="text-4xl font-semibold tabular-nums tracking-tight" aria-live="polite">{`$${price}`}</span>
                 <span className="text-sm text-muted-foreground">
-                  {plan.monthly === 0 ? 'forever' : yearly ? '/ year' : '/ month'}
+                  {plan.monthly === 0 ? 'once' : yearly ? '/ year' : '/ month'}
                 </span>
               </p>
               {plan.scalable && projects !== null && (
