@@ -57,8 +57,8 @@ export const plans: Plan[] = [
     id: 'free',
     name: 'Free',
     tagline: 'One project, watched weekly.',
-    monthly: 0,
-    yearly: 0,
+    monthly: 10,
+    yearly: 10,
     cadence: 'Weekly',
     features: [
       '1 project (1 TEST + 1 LIVE)',
