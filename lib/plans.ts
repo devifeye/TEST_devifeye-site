@@ -1,9 +1,10 @@
 export type Plan = {
-  id: 'free' | 'pro' | 'agency'
+  id: 'starter' | 'pro' | 'agency'
   name: string
   tagline: string
   monthly: number
   yearly: number
+  oneTime?: boolean
   cadence: string
   features: string[]
   missing?: string[]
@@ -54,11 +55,12 @@ export const agencyYearlyPrice = (projects: number) => agencyMonthlyPrice(projec
 
 export const plans: Plan[] = [
   {
-    id: 'free',
-    name: 'Free',
-    tagline: 'One project, watched weekly.',
+    id: 'starter',
+    name: 'Starter',
+    tagline: 'One project, pay once for lifetime access.',
     monthly: 10,
     yearly: 10,
+    oneTime: true,
     cadence: 'Weekly',
     features: [
       '1 project (1 TEST + 1 LIVE)',
@@ -67,7 +69,7 @@ export const plans: Plan[] = [
       'Metadata-only scanning',
     ],
     missing: ['VPS agent', 'API access', 'One-click file overwrites'],
-    cta: 'Start free',
+    cta: 'Get Starter',
   },
   {
     id: 'pro',
