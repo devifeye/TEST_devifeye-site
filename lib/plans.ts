@@ -2,9 +2,9 @@ export type Plan = {
   id: 'starter' | 'pro' | 'agency'
   name: string
   tagline: string
-  monthly: number
-  yearly: number
-  oneTime?: boolean
+  monthly?: number
+  yearly?: number
+  oneTimePrice?: number
   cadence: string
   features: string[]
   missing?: string[]
@@ -58,9 +58,7 @@ export const plans: Plan[] = [
     id: 'starter',
     name: 'Starter',
     tagline: 'One project, pay once for lifetime access.',
-    monthly: 10,
-    yearly: 10,
-    oneTime: true,
+    oneTimePrice: 12,
     cadence: 'Weekly',
     features: [
       '1 project (1 TEST + 1 LIVE)',
