@@ -1,6 +1,9 @@
+export type PlanScope = 'project' | 'account'
+
 export type Plan = {
   id: 'starter' | 'pro' | 'agency'
   name: string
+  scope: PlanScope
   tagline: string
   monthly?: number
   yearly?: number
@@ -57,6 +60,7 @@ export const plans: Plan[] = [
   {
     id: 'starter',
     name: 'Starter',
+    scope: 'project',
     tagline: 'One project, pay once for lifetime access.',
     oneTimePrice: 12,
     cadence: 'Weekly',
@@ -73,12 +77,13 @@ export const plans: Plan[] = [
     id: 'pro',
     name: 'Pro',
     tagline: 'For solo devs shipping every day.',
+    scope: 'project',
     monthly: 10,
     yearly: 100,
     cadence: 'Daily',
     features: [
-      '2 projects with VPS agent',
-      '2 TEST · 2 LIVE · 2 VPS',
+      '1 project with VPS agent',
+      '1 TEST · 1 LIVE · 1 VPS',
       'Daily background checks',
       'One-click file overwrites',
       'Discord & Telegram bot alerts',
@@ -91,15 +96,16 @@ export const plans: Plan[] = [
   {
     id: 'agency',
     name: 'Agency',
-    tagline: 'Build your plan: 3 to 25 projects.',
+    scope: 'account',
+    tagline: 'Build your workspace pool: 3 to 25 projects.',
     monthly: agencyMonthlyPrice(AGENCY_LIMITS.default),
     yearly: agencyYearlyPrice(AGENCY_LIMITS.default),
     cadence: 'Hourly',
     scalable: AGENCY_LIMITS,
     features: [
-      '{n} projects with VPS agent',
+      '{n} projects pool with VPS agents',
       '{n} TEST · {n} LIVE · {n} VPS',
-      'Hourly background checks',
+      'Hourly background checks across all pool projects',
       'One-click file overwrites',
       'Discord & Telegram bot alerts',
       'Multi-channel custom API webhooks',
